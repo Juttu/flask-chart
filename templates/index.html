@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <div id="chart" class="chart"></div>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+      (() => {
+        const update = () => {
+          fetch('/data')
+            .then(resp => resp.json())
+            .then(data => Plotly.react('chart', data, {}));
+        };
+        update();
+        setInterval(update, 3000);
+      })();
+    </script>
+  </body>
+</html>
