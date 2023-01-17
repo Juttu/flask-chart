@@ -11,7 +11,6 @@ from py5paisa.order import Order, OrderType, Exchange
 
 from py5paisa.order import Order, OrderType, AHPlaced
 
-import asyncio
 
 import math
 from datetime import datetime, timedelta
@@ -19,18 +18,16 @@ import json
 import plotly
 import plotly.express as px
 
-import random
 
 
 from pytz import timezone
 
 # import mido
 from threading import Thread
+import multiprocessing
 
-from flask_apscheduler import APScheduler
 
 app = Flask(__name__)
-scheduler = APScheduler()
 
 app.config["SECRET_KEY"] = "11b5ca1077aabd6db5a41af3e90cacf4d9cd7f17"
 app.config["MONGO_URI"] = "mongodb+srv://Anurag:Anurag@cluster0.toske.mongodb.net/?retryWrites=true&w=majority"
@@ -203,6 +200,9 @@ def cont_fun():
 
 if __name__ == "__main__":
 
-    scheduler.add_job(id = 'Scheduled Task', func=cont_fun, trigger="interval", seconds=1)
-    scheduler.start()
+    Thread(target=cont_fun, args=()).start()
     app.run(debug=False, host='0.0.0.0',threaded=True)
+
+    
+
+    
