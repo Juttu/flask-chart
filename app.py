@@ -200,5 +200,5 @@ if __name__ == "__main__":
 
     p = Thread(target=cont_fun, args=(1,))
     p.start()
-    app.run(debug=False, host='0.0.0.0')
+    app.run(debug=False, host='0.0.0.0',threaded=True)
     p.join()
