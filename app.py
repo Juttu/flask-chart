@@ -40,26 +40,9 @@ user_collection = pymongo.collection.Collection(db, 'user_collection')
 
 
 # BROKER CONNECT
-cred = {
-    "APP_NAME": "5P53408370",
-    "APP_SOURCE": "9600",
-    "USER_ID": "sXXGlk7fWd2",
-    "PASSWORD": "AyymZGd8jNd",
-    "USER_KEY": "LaEwsZJO1eFxpyr2l41lXsaXdlyDVu0v",
-    "ENCRYPTION_KEY": "oMOjFnPWhz0DAZd0yGPTL7lsQVsXufC8"
-}
-
-client = FivePaisaClient(email="hrushikesh838@gmail.com",
-                         passwd="Itsmyvsh838@", dob="19990530", cred=cred)
-client.login()
-
 
 today_date = datetime.now()
-# print(today_date.date)
 
-
-# def scheduleTask():
-#     print("This test runs every 3 seconds")
 
 @app.route("/data")
 def data():
@@ -98,109 +81,11 @@ def bar_with_plotly():
     return render_template('index.html')
 
 
-def cont_fun():
-    while True:
-        today_date = datetime.now()
-        res_del1 = db.opdata.delete_many({"x_coordinate": {"$lt": datetime(
-            today_date.year, today_date.month, today_date.day)}})
-
-        niftyspot = [{"Exchange": "N", "ExchangeType": "C", "Symbol": "NIFTY"}]
-        niftyltp = client.fetch_market_depth_by_symbol(
-            niftyspot)['Data'][0]['LastTradedPrice']
-        print(niftyltp)
-        atmstrikeup = math.ceil(niftyltp/50)*50
-        atmstrikedown = math.floor(niftyltp/50)*50
-        if (atmstrikeup-niftyltp) >= (niftyltp-atmstrikedown):
-            strikeprice = float(atmstrikedown)
-            strikeprice = "{:.2f}".format(strikeprice)
-            strikeprice = str(strikeprice)
-        else:
-            strikeprice = float(atmstrikeup)
-            strikeprice = "{:.2f}".format(strikeprice)
-            strikeprice = str(strikeprice)
-
-        b1 = float(strikeprice)
-        c1 = b1+50
-        d1 = "{:.2f}".format(c1)
-        strikepriceup = str(d1)
-
-        b2 = float(strikeprice)
-        c2 = b2-50
-        d2 = "{:.2f}".format(c2)
-        strikepricedown = str(d2)
-
-        putscripname = "NIFTY 19 Jan 2023 PE"+" "+strikeprice
-        callscripname = "NIFTY 19 Jan 2023 CE"+" "+strikeprice
-
-        putscripnameup = "NIFTY 19 Jan 2023 PE"+" "+strikepriceup
-        callscripnameup = "NIFTY 19 Jan 2023 CE"+" "+strikepriceup
-
-        putscripnamedown = "NIFTY 19 Jan 2023 PE"+" "+strikepricedown
-        callscripnamedown = "NIFTY 19 Jan 2023 CE"+" "+strikepricedown
-
-        putstrike = [
-            {"Exchange": "N", "ExchangeType": "D", "Symbol": putscripname}]
-        callstrike = [
-            {"Exchange": "N", "ExchangeType": "D", "Symbol": callscripname}]
-        put = client.fetch_market_depth_by_symbol(putstrike)['Data'][0]
-        # print(put['ScripCode'])
-        pp = put['LastTradedPrice']
-        call = client.fetch_market_depth_by_symbol(callstrike)['Data'][0]
-
-        cp = call['LastTradedPrice']
-
-        putstrikeup = [
-            {"Exchange": "N", "ExchangeType": "D", "Symbol": putscripnameup}]
-        callstrikeup = [
-            {"Exchange": "N", "ExchangeType": "D", "Symbol": callscripnameup}]
-        putup = client.fetch_market_depth_by_symbol(putstrikeup)['Data'][0]
-        # print(putup['ScripCode'])
-        ppup = putup['LastTradedPrice']
-        callup = client.fetch_market_depth_by_symbol(callstrikeup)['Data'][0]
-
-        cpup = callup['LastTradedPrice']
-
-        putstrikedown = [
-            {"Exchange": "N", "ExchangeType": "D", "Symbol": putscripnamedown}]
-        callstrikedown = [
-            {"Exchange": "N", "ExchangeType": "D", "Symbol": callscripnamedown}]
-        putdown = client.fetch_market_depth_by_symbol(putstrikedown)['Data'][0]
-        # print(putdown['ScripCode'])
-
-        ppdown = putdown['LastTradedPrice']
-
-        calldown = client.fetch_market_depth_by_symbol(callstrikedown)[
-            'Data'][0]
-
-        cpdown = calldown['LastTradedPrice']
-
-        final_data = [cp, pp, cpup, ppup, cpdown, ppdown]
-
-        print(final_data)
-        x_coordinate = datetime.now()
-
-        past = datetime.now() - timedelta(days=1)
-
-        y_coordinate = (final_data[0]+final_data[1]+final_data[2] +
-                        final_data[3]+final_data[4]+final_data[5])/3
-
-        ind_time = datetime.now(timezone("Asia/Kolkata"))
-        print(ind_time, "IND_TIME")
-        # print(today_date,"TIMEEEEEE")
-
-        today_nine30 = ind_time.replace(
-            hour=9, minute=30, second=0, microsecond=0)
-        today_three30 = ind_time.replace(
-            hour=15, minute=30, second=0, microsecond=0)
-        # print(today_nine30,today_three30)
-        # if ind_time>=today_nine30 and today_date<=today_three30:
-        db.opdata.insert_one({"x_coordinate": x_coordinate,
-                              "y_coordinate": y_coordinate})
+    
 
 
 if __name__ == "__main__":
 
-    Thread(target=cont_fun, args=()).start()
     app.run(debug=False, host='0.0.0.0',threaded=True)
 
     
