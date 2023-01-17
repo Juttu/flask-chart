@@ -150,8 +150,8 @@ def data():
     today_nine30=ind_time.replace(hour=9, minute=30, second=0, microsecond=0)
     today_three30=ind_time.replace(hour=15, minute=30, second=0, microsecond=0)
     print(today_nine30,today_three30)
-    if ind_time>=today_nine30 and today_date<=today_three30:
-        db.opdata.insert_one({"x_coordinate": x_coordinate,
+#     if ind_time>=today_nine30 and today_date<=today_three30:
+    db.opdata.insert_one({"x_coordinate": x_coordinate,
                          "y_coordinate": y_coordinate})
     all_items_db = db.opdata.find()
 
