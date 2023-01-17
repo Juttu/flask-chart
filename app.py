@@ -27,8 +27,11 @@ from pytz import timezone
 # import mido
 from threading import Thread
 
+from flask_apscheduler import APScheduler
 
 app = Flask(__name__)
+scheduler = APScheduler()
+
 app.config["SECRET_KEY"] = "11b5ca1077aabd6db5a41af3e90cacf4d9cd7f17"
 app.config["MONGO_URI"] = "mongodb+srv://Anurag:Anurag@cluster0.toske.mongodb.net/?retryWrites=true&w=majority"
 
@@ -57,6 +60,9 @@ client.login()
 today_date = datetime.now()
 # print(today_date.date)
 
+
+# def scheduleTask():
+#     print("This test runs every 3 seconds")
 
 @app.route("/data")
 def data():
@@ -95,7 +101,7 @@ def bar_with_plotly():
     return render_template('index.html')
 
 
-def cont_fun(a):
+def cont_fun():
     while True:
         today_date = datetime.now()
         res_del1 = db.opdata.delete_many({"x_coordinate": {"$lt": datetime(
@@ -193,12 +199,10 @@ def cont_fun(a):
         # if ind_time>=today_nine30 and today_date<=today_three30:
         db.opdata.insert_one({"x_coordinate": x_coordinate,
                               "y_coordinate": y_coordinate})
-        print("CONT", a)
 
 
 if __name__ == "__main__":
 
-    p = Thread(target=cont_fun, args=(1,))
-    p.start()
+    scheduler.add_job(id = 'Scheduled Task', func=cont_fun, trigger="interval", seconds=1)
+    scheduler.start()
     app.run(debug=False, host='0.0.0.0',threaded=True)
-    p.join()
