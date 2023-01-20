@@ -80,7 +80,7 @@ def data():
         'OP': YAxis,
     })
 
-    fig = px.line(df, x='Time', y='OP')
+    fig = px.line(df, x='Time', y='OP', width=1200, height=600)
     fig.update_layout(legend=dict(
         orientation="v",
         yanchor="auto",
