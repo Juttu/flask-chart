@@ -29,7 +29,11 @@ import urllib.request
 import json
 import os
 
+from flask_cors import CORS
+
+
 app = Flask(__name__)
+CORS(app)
 
 app.config["SECRET_KEY"] = "11b5ca1077aabd6db5a41af3e90cacf4d9cd7f17"
 app.config["MONGO_URI"] = "mongodb+srv://Anurag:Anurag@cluster0.toske.mongodb.net/?retryWrites=true&w=majority"
