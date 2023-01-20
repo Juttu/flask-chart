@@ -19,13 +19,15 @@ import plotly
 import plotly.express as px
 
 
-
 from pytz import timezone
 
 # import mido
 from threading import Thread
 import multiprocessing
 
+import urllib.request
+import json
+import os
 
 app = Flask(__name__)
 
@@ -46,6 +48,12 @@ today_date = datetime.now()
 
 @app.route("/data")
 def data():
+    # url = "https://chart-backend.onrender.com/data".format(
+    #     os.environ.get("TMDB_API_KEY"))
+    # response = urllib.request.urlopen(url)
+    # data = response.read()
+    # dict = json.loads(data)
+    # print(dict)
 
     all_items_db = db.opdata.find()
 
@@ -69,6 +77,13 @@ def data():
     })
 
     fig = px.line(df, x='Time', y='OP', markers=True)
+    fig.update_layout(legend=dict(
+        orientation="v",
+        yanchor="auto",
+        y=1,
+        xanchor="right",  # changed
+        x=-0.3
+    ))
     dat = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
     resp = make_response(dat)
@@ -81,13 +96,32 @@ def bar_with_plotly():
     return render_template('index.html')
 
 
-    
+@app.route("/dataapi")
+def dataapi():
+    all_items_db = db.opdata.find()
+
+    all_items = []
+
+    for i in all_items_db:
+        all_items.append(i)
+
+    for i in all_items:
+        del i['_id']
+    XAxis = []
+    YAxis = []
+    for e in all_items:
+        XAxis.append(e['x_coordinate'])
+    for e1 in all_items:
+        YAxis.append(e1['y_coordinate'])
+
+    print(datetime.timestamp(all_items[0]["x_coordinate"])*1000)
+
+    for i in all_items:
+        i["x_coordinate"]=round(datetime.timestamp(i["x_coordinate"])*1000)
+
+    return all_items
 
 
 if __name__ == "__main__":
 
-    app.run(debug=False, host='0.0.0.0',threaded=True)
-
-    
-
-    
+    app.run(debug=False, host='0.0.0.0', threaded=True)
