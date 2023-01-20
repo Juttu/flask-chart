@@ -117,8 +117,11 @@ def dataapi():
     print(datetime.timestamp(all_items[0]["x_coordinate"])*1000)
 
     for i in all_items:
-        i["x_coordinate"]=round(datetime.timestamp(i["x_coordinate"])*1000)
-
+        i["x_coordinate"] = round(datetime.timestamp(i["x_coordinate"])*1000)
+    for i in all_items:
+        i['time'] = i.pop('x_coordinate')
+    for j in all_items:
+        j['value'] = j.pop('y_coordinate')
     return all_items
 
 
