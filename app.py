@@ -118,10 +118,10 @@ def dataapi():
     for e1 in all_items:
         YAxis.append(e1['y_coordinate'])
 
-    print(datetime.timestamp(all_items[0]["x_coordinate"])*1000)
+    print(datetime.timestamp(all_items[0]["x_coordinate"]))
 
     for i in all_items:
-        i["x_coordinate"] = round(datetime.timestamp(i["x_coordinate"])*1000)
+        i["x_coordinate"] = round(datetime.timestamp(i["x_coordinate"]))
     for i in all_items:
         i['time'] = i.pop('x_coordinate')
     for j in all_items:
@@ -149,10 +149,10 @@ def bndataapi():
     for e1 in all_items:
         YAxis.append(e1['y_coordinate'])
 
-    print(datetime.timestamp(all_items[0]["x_coordinate"])*1000)
+    print(datetime.timestamp(all_items[0]["x_coordinate"]))
 
     for i in all_items:
-        i["x_coordinate"] = round(datetime.timestamp(i["x_coordinate"])*1000)
+        i["x_coordinate"] = round(datetime.timestamp(i["x_coordinate"]))
     for i in all_items:
         i['time'] = i.pop('x_coordinate')
     for j in all_items:
