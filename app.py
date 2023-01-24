@@ -129,6 +129,40 @@ def dataapi():
     return all_items
 
 
+
+
+@app.route("/bndataapi")
+def bndataapi():
+    all_items_db = db.bnopdata.find()
+
+    all_items = []
+
+    for i in all_items_db:
+        all_items.append(i)
+
+    for i in all_items:
+        del i['_id']
+    XAxis = []
+    YAxis = []
+    for e in all_items:
+        XAxis.append(e['x_coordinate'])
+    for e1 in all_items:
+        YAxis.append(e1['y_coordinate'])
+
+    print(datetime.timestamp(all_items[0]["x_coordinate"])*1000)
+
+    for i in all_items:
+        i["x_coordinate"] = round(datetime.timestamp(i["x_coordinate"])*1000)
+    for i in all_items:
+        i['time'] = i.pop('x_coordinate')
+    for j in all_items:
+        j['value'] = j.pop('y_coordinate')
+    return all_items
+
+
+
+
+
 if __name__ == "__main__":
 
     app.run(debug=False, host='0.0.0.0', threaded=True)
