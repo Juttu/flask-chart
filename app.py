@@ -80,7 +80,7 @@ def data():
         'OP': YAxis,
     })
 
-    fig = px.line(df, x='Time', y='OP', width=1200, height=600)
+    fig = px.line(df, x='Time', y='OP', markers=True, width=1200, height=600)
     fig.update_layout(legend=dict(
         orientation="v",
         yanchor="auto",
@@ -100,10 +100,7 @@ def bar_with_plotly():
     return render_template('index.html')
 
 
-@app.route("/dataapi")
-def dataapi():
-    all_items_db = db.opdata.find()
-
+def fun(all_items_db):
     all_items = []
 
     for i in all_items_db:
@@ -125,40 +122,37 @@ def dataapi():
     for i in all_items:
         i['time'] = i.pop('x_coordinate')
     for j in all_items:
-        j['value'] = j.pop('y_coordinate')
+        j['value'] = j
+
+
+@app.route("/dataapi")
+def dataapi():
+    all_items_db = db.opdata.find()
+    all_items = fun(all_items_db)
+
     return all_items
-
-
 
 
 @app.route("/bndataapi")
 def bndataapi():
     all_items_db = db.bnopdata.find()
+    all_items = fun(all_items_db)
 
-    all_items = []
-
-    for i in all_items_db:
-        all_items.append(i)
-
-    for i in all_items:
-        del i['_id']
-    XAxis = []
-    YAxis = []
-    for e in all_items:
-        XAxis.append(e['x_coordinate'])
-    for e1 in all_items:
-        YAxis.append(e1['y_coordinate'])
-
-    print(datetime.timestamp(all_items[0]["x_coordinate"]))
-
-    for i in all_items:
-        i["x_coordinate"] = round(datetime.timestamp(i["x_coordinate"]))
-    for i in all_items:
-        i['time'] = i.pop('x_coordinate')
-    for j in all_items:
-        j['value'] = j.pop('y_coordinate')
     return all_items
 
+@app.route("/nwbndataapi")
+def nwbndataapi():
+    all_items_db = db.nwbnopdata.find()
+    all_items = fun(all_items_db)
+
+    return all_items
+
+@app.route("/nwdataapi")
+def nwdataapi():
+    all_items_db = db.nwopdata.find()
+    all_items = fun(all_items_db)
+
+    return all_items
 
 
 
