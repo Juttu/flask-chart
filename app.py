@@ -123,6 +123,7 @@ def fun(all_items_db):
         i['time'] = i.pop('x_coordinate')
     for j in all_items:
         j['value'] = j
+    return all_items
 
 
 @app.route("/dataapi")
