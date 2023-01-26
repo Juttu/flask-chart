@@ -50,15 +50,10 @@ user_collection = pymongo.collection.Collection(db, 'user_collection')
 today_date = datetime.now()
 
 
-@app.route("/data")
-def data():
-    # url = "https://chart-backend.onrender.com/data".format(
-    #     os.environ.get("TMDB_API_KEY"))
-    # response = urllib.request.urlopen(url)
-    # data = response.read()
-    # dict = json.loads(data)
-    # print(dict)
 
+
+@app.route("/dataapi")
+def dataapi():
     all_items_db = db.opdata.find()
 
     all_items = []
@@ -75,86 +70,104 @@ def data():
     for e1 in all_items:
         YAxis.append(e1['y_coordinate'])
 
-    df = pd.DataFrame({
-        'Time': XAxis,
-        'OP': YAxis,
-    })
-
-    fig = px.line(df, x='Time', y='OP', markers=True, width=1200, height=600)
-    fig.update_layout(legend=dict(
-        orientation="v",
-        yanchor="auto",
-        y=1,
-        xanchor="right",  # changed
-        x=-0.3
-    ))
-    dat = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-
-    resp = make_response(dat)
-    resp.mimetype = 'application/json'
-    return resp
-
-
-@app.route('/')
-def bar_with_plotly():
-    return render_template('index.html')
-
-
-def fun(all_items_db):
-    all_items = []
-
-    for i in all_items_db:
-        all_items.append(i)
-
-    for i in all_items:
-        del i['_id']
-    XAxis = []
-    YAxis = []
-    for e in all_items:
-        XAxis.append(e['x_coordinate'])
-    for e1 in all_items:
-        YAxis.append(e1['y_coordinate'])
-
-    print(datetime.timestamp(all_items[0]["x_coordinate"]))
+    print(datetime.timestamp(all_items[0]["x_coordinate"])*1000)
 
     for i in all_items:
         i["x_coordinate"] = round(datetime.timestamp(i["x_coordinate"]))
     for i in all_items:
         i['time'] = i.pop('x_coordinate')
     for j in all_items:
-        j['value'] = j
+        j['value'] = j.pop('y_coordinate')
     return all_items
 
 
-@app.route("/dataapi")
-def dataapi():
-    all_items_db = db.opdata.find()
-    all_items = fun(all_items_db)
-
-    return all_items
 
 
 @app.route("/bndataapi")
 def bndataapi():
     all_items_db = db.bnopdata.find()
-    all_items = fun(all_items_db)
 
+    all_items = []
+
+    for i in all_items_db:
+        all_items.append(i)
+
+    for i in all_items:
+        del i['_id']
+    XAxis = []
+    YAxis = []
+    for e in all_items:
+        XAxis.append(e['x_coordinate'])
+    for e1 in all_items:
+        YAxis.append(e1['y_coordinate'])
+
+    print(datetime.timestamp(all_items[0]["x_coordinate"])*1000)
+
+    for i in all_items:
+        i["x_coordinate"] = round(datetime.timestamp(i["x_coordinate"]))
+    for i in all_items:
+        i['time'] = i.pop('x_coordinate')
+    for j in all_items:
+        j['value'] = j.pop('y_coordinate')
     return all_items
 
-@app.route("/nwbndataapi")
-def nwbndataapi():
-    all_items_db = db.nwbnopdata.find()
-    all_items = fun(all_items_db)
-
-    return all_items
 
 @app.route("/nwdataapi")
 def nwdataapi():
     all_items_db = db.nwopdata.find()
-    all_items = fun(all_items_db)
 
+    all_items = []
+
+    for i in all_items_db:
+        all_items.append(i)
+
+    for i in all_items:
+        del i['_id']
+    XAxis = []
+    YAxis = []
+    for e in all_items:
+        XAxis.append(e['x_coordinate'])
+    for e1 in all_items:
+        YAxis.append(e1['y_coordinate'])
+
+    print(datetime.timestamp(all_items[0]["x_coordinate"])*1000)
+
+    for i in all_items:
+        i["x_coordinate"] = round(datetime.timestamp(i["x_coordinate"]))
+    for i in all_items:
+        i['time'] = i.pop('x_coordinate')
+    for j in all_items:
+        j['value'] = j.pop('y_coordinate')
     return all_items
 
+
+@app.route("/nwbndataapi")
+def nwbndataapi():
+    all_items_db = db.nwbnopdata.find()
+
+    all_items = []
+
+    for i in all_items_db:
+        all_items.append(i)
+
+    for i in all_items:
+        del i['_id']
+    XAxis = []
+    YAxis = []
+    for e in all_items:
+        XAxis.append(e['x_coordinate'])
+    for e1 in all_items:
+        YAxis.append(e1['y_coordinate'])
+
+    print(datetime.timestamp(all_items[0]["x_coordinate"])*1000)
+
+    for i in all_items:
+        i["x_coordinate"] = round(datetime.timestamp(i["x_coordinate"]))
+    for i in all_items:
+        i['time'] = i.pop('x_coordinate')
+    for j in all_items:
+        j['value'] = j.pop('y_coordinate')
+    return all_items
 
 
 
